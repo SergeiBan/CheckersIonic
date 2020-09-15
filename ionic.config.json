@@ -1,0 +1,7 @@
+{
+  "name": "checkers",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
