@@ -1,0 +1,19 @@
+.square {
+    width: 100px;
+    min-height: 100px;
+}
+
+.white {
+    background-color: green;
+    color: white;
+}
+
+.black {
+    background: green;
+    color: black;
+}
+
+.void {
+    background: silver;
+    color: black;
+}
