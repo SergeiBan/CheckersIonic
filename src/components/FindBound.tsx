@@ -1,58 +1,65 @@
 import React, { FC } from 'react';
 
-const findBoundSpots = (squares: any[], white: boolean) => {
-
-    const firstRow = 2;
-    const lastRow = squares.length - 3;
-    const firstSpot = 2;
-    const lastSpot = squares[0].length - 3;
-
+const findBoundSpots = (allSquares: any[], white: boolean) => {
     const color = (white) ? 'W' : 'B';
-    
     const candidates = Array();
-    const bound = Array();
-    for(let i = firstRow; i <= lastRow; i++) {
-        for(let j = firstSpot; j <= lastSpot; j++) {
-            if(squares[i][j] === color) {
-                candidates.push([i, j]);
+    for(let i = 0; i < allSquares.length; i++) {
+        console.log(allSquares[0]);
+        for(let j = 0; j < allSquares[0].length; j++) {
+            if(allSquares[i][j] !== color) {
+                continue;
             }
+            const newSquares = allSquares.slice();
+            const targetCounter = findPrey([i, j], newSquares, color);
+            candidates.push(targetCounter);
         }
     }
 
-    const boundCandidates = findPrey(candidates, squares, color);
-    return boundCandidates;
+    return candidates;
 }
 
-const findPrey = (candidates: any[], squares: any[], color: string) => {
-    const theyAreBound = Array();
+const findPrey : any = (square: any[], squares: any[], color: string, targets : number = 0) => {
     const opponent = (color === 'W') ? 'B' : 'W';
     
-    candidates.forEach(square => {
-        const y = square[0];
-        const x = square[1];
-        if ((squares[y-1][x-1] === opponent) && 
+    const y = square[0];
+    const x = square[1];
+    if ((y > 1 && x > 1) &&
+        (squares[y-1][x-1] === opponent) && 
         (squares[y-2][x-2] === 'V')) {
-            theyAreBound.push(square);
-            return;
+            const newSquares = squares.slice();
+            newSquares[y][x] = 'V';
+            newSquares[y-1][x-1] = 'V';
+            newSquares[y-2][x-2] = color;
+            return findPrey([y-2, x-2], newSquares, color, targets+1);
         }
-        if ((squares[y-1][x+1] === opponent) && 
+    if ((y > 1 && x < 8) &&
+        (squares[y-1][x+1] === opponent) && 
         (squares[y-2][x+2] === 'V')) {
-            theyAreBound.push(square);
-            return;
+            const newSquares = squares.slice();
+            newSquares[y][x] = 'V';
+            newSquares[y-1][x+1] = 'V';
+            newSquares[y-2][x+2] = color;
+            return findPrey([y-2, x+2], newSquares, color, targets+1);
         }
-        if ((squares[y+1][x-1] === opponent) && 
+    if ((y < 8 && x > 1) &&
+        (squares[y+1][x-1] === opponent) && 
         (squares[y+2][x-2] === 'V')) {
-            theyAreBound.push(square);
-            return;
+            const newSquares = squares.slice();
+            newSquares[y][x] = 'V';
+            newSquares[y+1][x-1] = 'V';
+            newSquares[y+2][x-2] = color;
+            return findPrey([y+2, x-2], newSquares, color, targets+1);
         }
-        if ((squares[y+1][x+1] === opponent) && 
+    if ((y < 8 && x < 8) &&
+        (squares[y+1][x+1] === opponent) && 
         (squares[y+2][x+2] === 'V')) {
-            theyAreBound.push(square);
-            return;
+            const newSquares = squares.slice();
+            newSquares[y][x] = 'V';
+            newSquares[y+1][x+1] = 'V';
+            newSquares[y+2][x+2] = color;
+            return findPrey([y+2, x+2], newSquares, color, targets+1);
         }
-    });
-    
-    return theyAreBound;
+    return [squares, targets];
 }
 
 export {findBoundSpots};

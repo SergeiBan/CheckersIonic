@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Square } from '../components/Square';
 import { findBoundSpots } from '../components/FindBound';
-import { compareTargetLine } from '../compareTargetLine';
+// import { compareTargetLine } from '../compareTargetLine';
 
 export class Board extends React.Component<{}, {squares: any, blackIsNext: boolean, squareIsPicked: boolean, pickedSquare: any}> {
     constructor(props: any) {
@@ -11,8 +11,10 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
                     ['V', 'B', 'V', 'B', 'V', 'B', 'V', 'B', 'V', 'B'], 
                     ['B', 'V', 'B', 'V', 'B', 'V', 'B', 'V', 'B', 'V'],
                     ['V', 'B', 'V', 'B', 'V', 'B', 'V', 'B', 'V', 'B'], 
+                    ['B', 'V', 'B', 'V', 'B', 'V', 'B', 'V', 'B', 'V'],
+                    ['V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V'],
                     ['V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V'], 
-                    ['V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V', 'V'], 
+                    ['V', 'W', 'V', 'W', 'V', 'W', 'V', 'W', 'V', 'W'], 
                     ['W', 'V', 'W', 'V', 'W', 'V', 'W', 'V', 'W', 'V'], 
                     ['V', 'W', 'V', 'W', 'V', 'W', 'V', 'W', 'V', 'W'],
                     ['W', 'V', 'W', 'V', 'W', 'V', 'W', 'V', 'W', 'V']
@@ -25,8 +27,9 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
 
     handleClick(rowNumber: any, spotNumber: any) {
 
-        const boundSpots = findBoundSpots(this.state.squares, this.state.blackIsNext);
-        console.log(compareTargetLine(boundSpots));
+        const clonedSquares = this.state.squares.map((e : any)  => ({ ... e}));
+        const boundSpots = findBoundSpots(clonedSquares, this.state.blackIsNext);
+        // console.log(boundSpots);
 
         const value = this.state.squares[rowNumber][spotNumber];
 
@@ -84,7 +87,7 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
     }
         
     render() {
-        const fullBoard = Array(8);
+        const fullBoard = Array(10);
         {
             this.state.squares.map((val: any, ind: any) => {
                 this.state.squares[ind].map((val2: any, ind2: any) => {
@@ -94,11 +97,9 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
         }
         return (
             <div className="board">
-                <div className="row">
                    {fullBoard}
-                </div>
-                
             </div>
+                
         );
     }
 }
