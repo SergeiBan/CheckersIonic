@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Square } from '../components/Square';
 import { findBoundSpots } from '../components/FindBound';
 // import { compareTargetLine } from '../compareTargetLine';
+import { deepCopyFunction } from '../deepCopy';
 
 export class Board extends React.Component<{}, {squares: any, blackIsNext: boolean, squareIsPicked: boolean, pickedSquare: any}> {
     constructor(props: any) {
@@ -27,9 +28,9 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
 
     handleClick(rowNumber: any, spotNumber: any) {
 
-        const clonedSquares = this.state.squares.map((e : any)  => ({ ... e}));
+        const clonedSquares = deepCopyFunction(this.state.squares);
         const boundSpots = findBoundSpots(clonedSquares, this.state.blackIsNext);
-        // console.log(boundSpots);
+        console.log(boundSpots);
 
         const value = this.state.squares[rowNumber][spotNumber];
 
