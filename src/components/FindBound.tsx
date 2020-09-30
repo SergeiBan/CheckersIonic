@@ -32,7 +32,7 @@ const findPrey : any = (square: any, squares: any, color: string, targets : numb
 
     const squareResult = Array();
 
-    const selectActive = (initialPiece: any, currentPiece: any, map: any, res: number) => {
+    const selectActive = (initialPiece: any, currentPiece: any, eatenPiece: any, map: any, res: number) => {
         
         const y = currentPiece[0];
         const x = currentPiece[1];
@@ -51,19 +51,17 @@ const findPrey : any = (square: any, squares: any, color: string, targets : numb
                 newMap[y][x] = 'V';
                 newMap[val[0]][val[1]] = 'V';
                 newMap[val[2]][val[3]] = color;
-                // squareResult.push(initialPiece, [val[2], val[3]], newMap, (res + 1));
-                selectActive(initialPiece, [val[2], val[3]], newMap, (res + 1));
+                selectActive(initialPiece, [val[2], val[3]], [val[0], val[1]], newMap, (res + 1));
             }
             return;
         });
         if (res > 0) {
-            console.log(res);
-            squareResult.push(initialPiece, currentPiece, map, res);
+            squareResult.push(initialPiece, currentPiece, eatenPiece, map, res);
             res = 0;
         }
     }
 
-    selectActive(square, square, squares, 0);
+    selectActive(square, square, [0, 0], squares, 0);
 
     return squareResult;
 }
