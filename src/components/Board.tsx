@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import { Square } from '../components/Square';
 import { findBoundSpots } from '../components/FindBound';
-// import { compareTargetLine } from '../compareTargetLine';
 import { deepCopyFunction } from '../deepCopy';
 import { highlightPieces } from '../highlightPieces';
 
-export class Board extends React.Component<{}, {squares: any, blackIsNext: boolean, squareIsPicked: boolean, pickedSquare: any}> {
+export class Board extends React.Component<{}, {squares: any, blackIsNext: boolean, squareIsPicked: boolean, pickedSquare: any, bound: boolean}> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -24,13 +23,13 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
             blackIsNext: true,
             squareIsPicked: false,
             pickedSquare: [0, 0],
+            bound: false,
         }
     }
-
+    
     handleClick(rowNumber: any, spotNumber: any) {
-
         const value = this.state.squares[rowNumber][spotNumber];
-
+        
         if ((value === 'W' && this.state.blackIsNext) ||
             value === 'B' && !this.state.blackIsNext) {
                 this.setState({
@@ -53,12 +52,15 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
             const newSquares = this.state.squares.slice();
             newSquares[pickedRow][pickedSpot] = 'V';
             newSquares[rowNumber][spotNumber] = 'W';
-            this.setState({ squares: newSquares, 
-                            blackIsNext: false, 
-                            squareIsPicked: false,
-                            });
+
+            const boundSpots = findBoundSpots(deepCopyFunction(this.state.squares), !this.state.blackIsNext);
+            this.setState({ 
+                squares: (boundSpots.length === 0) ? newSquares : highlightPieces(deepCopyFunction(this.state.squares), deepCopyFunction(boundSpots)), 
+                blackIsNext: false, 
+                squareIsPicked: false });
             return;
         }
+
         if (
             (pickedOne === 'B') && 
             (rowNumber === pickedRow + 1) &&
@@ -68,17 +70,19 @@ export class Board extends React.Component<{}, {squares: any, blackIsNext: boole
             const newSquares = this.state.squares.slice();
             newSquares[pickedRow][pickedSpot] = 'V';
             newSquares[rowNumber][spotNumber] = 'B';
-            this.setState({ squares: newSquares, blackIsNext: true, squareIsPicked: false });
 
-            const clonedSquares = deepCopyFunction(this.state.squares);
-            const boundSpots = findBoundSpots(clonedSquares, !this.state.blackIsNext);
-            if (boundSpots.length === 0) {return};
-            console.log(highlightPieces(deepCopyFunction(clonedSquares), deepCopyFunction(boundSpots)));
+            const boundSpots = findBoundSpots(deepCopyFunction(this.state.squares), !this.state.blackIsNext);
+            this.setState({ 
+                squares: (boundSpots.length === 0) ? newSquares : highlightPieces(deepCopyFunction(this.state.squares), deepCopyFunction(boundSpots)), 
+                blackIsNext: true, 
+                squareIsPicked: false });
+            
             return;
         }
         
-        
+        return;
     }
+
 
     renderSquare(rowNumber: any, spotNumber: any) {
         return (

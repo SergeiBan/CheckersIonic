@@ -18,7 +18,12 @@
     color: black;
 }
 
-.bound {
+.white__bound {
     background: yellow;
+    color: blue;
+}
+
+.black__bound {
+    background: orange;
     color: blue;
 }

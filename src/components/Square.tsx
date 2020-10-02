@@ -10,7 +10,8 @@ export class Square extends React.Component<{content: string, onClick: any}, {}>
             'W': 'white',
             'B': 'black',
             'V': 'void',
-            'Bound': 'bound',
+            'W B': 'white__bound',
+            'B B': 'black__bound',
         }
         let className = 'square ' + classes[this.props.content];
         return (
